@@ -74,10 +74,12 @@ class AudioStreamPlayback {
         inNumberBytes: UInt32,
         inNumberPackets: UInt32,
         inInputData: UnsafeRawPointer,
-        inPacketDescriptions: UnsafeMutablePointer<AudioStreamPacketDescription>) -> Void in
+        inPacketDescriptions: UnsafeMutablePointer<AudioStreamPacketDescription>?) -> Void in
         let playback: AudioStreamPlayback = unsafeBitCast(inClientData, to: AudioStreamPlayback.self)
         playback.initializeForAudioQueue()
-        playback.onAudioPacketsForFileStream(inNumberBytes, inNumberPackets, inInputData, inPacketDescriptions)
+        if let inPacketDescriptions = inPacketDescriptions {
+            playback.onAudioPacketsForFileStream(inNumberBytes, inNumberPackets, inInputData, inPacketDescriptions)
+        }
     }
 
     private var propertyListenerProc: AudioFileStream_PropertyListenerProc = {(
